@@ -2,37 +2,43 @@
 using System;
 using Domain.Recipes;
 using System.Linq;
+using System.Data.Entity;
+using Persistance.Recipes;
 
 namespace Persistance.Database
 {
-    internal class DatabaseService: IDatabaseService
+    internal class DatabaseService: DbContext, IDatabaseService
     {
-        private DatabaseAccess dbContext;
+        public IDbSet<Recipe> Recipes { get; set; }
 
-        public DatabaseService(DatabaseAccess dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        public DatabaseService() : base() { }
 
         public void CreateRecipe(Recipe recipe)
-            => dbContext.Recipes.Add(recipe);
+            => Recipes.Add(recipe);
 
         public void DeleteRecipe(int Id)
         {
             Recipe recipeToRemove = GetRecipe(Id);
-            dbContext.Recipes.Remove(recipeToRemove);
+            Recipes.Remove(recipeToRemove);
         }
 
         public Recipe GetRecipe(int Id)
-            => dbContext.Recipes.Single(rec => rec.Id == Id);        
+            => Recipes.Single(rec => rec.Id == Id);        
 
         public void UpdateRecipe(Recipe recipe)
         {
             Recipe recipeToUpdate = GetRecipe(recipe.Id);
-            dbContext.Entry(recipeToUpdate).CurrentValues.SetValues(recipe);
+            Entry(recipeToUpdate).CurrentValues.SetValues(recipe);
         }
 
         public void Save()
-            => dbContext.SaveChanges();        
+            => SaveChanges();
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Configurations.Add(new RecipeConfiguration());
+        }
     }
 }
