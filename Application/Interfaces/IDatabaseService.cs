@@ -1,11 +1,13 @@
 ﻿using Domain.Recipes;
-using System.Collections.Generic;
 
 namespace Application.Interfaces
 {
     public interface IDatabaseService
     {
-        List<Recipe> Recipes { get; set; }
+        void CreateRecipe(Recipe recipe);
+        Recipe GetRecipe(int Id);        
+        void UpdateRecipe(Recipe recipes);
+        void DeleteRecipe(int Id);
         void Save();
     }
 }
