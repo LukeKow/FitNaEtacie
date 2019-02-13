@@ -4,14 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Presentation.Recipes.Controllers
+namespace Presentation.Recipes
 {
     public class RecipesController : Controller
     {
         // GET: Recipes
         public ActionResult Index()
         {
-            ViewBag.test = "Test from controller";
+            ViewBag.Recipes = "Recipes from controller";
             return View();
         }
     }
